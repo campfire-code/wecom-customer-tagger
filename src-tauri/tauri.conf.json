@@ -62,12 +62,6 @@
         "displayLanguageSelector": false,
         "installMode": "currentUser"
       }
-    },
-    "externalBin": [
-      "binaries/ffmpeg"
-    ],
-    "resources": {
-      "binaries/ffmpeg-LICENSE.txt": "licenses/ffmpeg-LICENSE.txt"
     }
   },
   "mainBinaryName": "wecom-customer-tagger"
