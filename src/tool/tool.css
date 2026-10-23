@@ -1,0 +1,35 @@
+/* 企微客户标签批量整理：只用 kit.css 的变量，类名以 wt- 开头 */
+.wt-root { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 12px; }
+.wt-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.wt-card { padding: 12px 14px; display: grid; gap: 10px; }
+.wt-card p { margin: 0; }
+.wt-hd { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.wt-grow { flex: 1; }
+.wt-rules { display: grid; gap: 8px; }
+.wt-rule { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.wt-rule .k-input { width: auto; min-width: 0; }
+.wt-no { width: 20px; color: var(--muted); }
+.wt-val { width: 190px !important; }
+.wt-tag { width: 150px !important; }
+.wt-grp { width: 110px !important; }
+.wt-arrow { color: var(--muted); white-space: nowrap; }
+.wt-bad { color: var(--err); font-size: .88em; }
+.wt-check { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); }
+.wt-ai { display: grid; gap: 8px; padding: 10px 12px; border-radius: 10px; background: var(--chip); }
+.wt-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.wt-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line-strong); cursor: pointer; font-size: .9em; }
+.wt-chip input { position: absolute; opacity: 0; pointer-events: none; }
+.wt-chip.on { background: var(--primary-soft); color: var(--primary); border-color: var(--primary); }
+.wt-chip:focus-within { outline: 2px solid var(--primary); }
+.wt-progress { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+.wt-stat { padding: 2px 10px; border-radius: 999px; background: var(--chip); font-size: .9em; }
+.wt-stat.warn { background: var(--warn-soft); color: var(--warn); }
+.wt-tablebox { max-height: 360px; }
+.wt-remark { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wt-tagpill { display: inline-block; margin-right: 4px; padding: 0 8px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: .9em; }
+.wt-st.ok { color: var(--ok); }
+.wt-st.err { color: var(--err); white-space: normal; }
+.wt-more { padding: 8px 12px; }
+.wt-confirm { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; color: var(--warn); font-weight: 500; }
+.wt-empty { display: grid; justify-items: center; gap: 8px; padding: 36px 24px; text-align: center; }
+.wt-empty b { font-size: 1.1em; }

@@ -1,0 +1,13 @@
+/* 企业微信设置面板与数据来源切换（w06 / w08 / w09 共用写法），只用 kit.css 的变量 */
+.wx-setup { overflow: hidden; }
+.wx-setup-hd { width: 100%; display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 0; background: none; cursor: pointer; text-align: left; color: inherit; font: inherit; }
+.wx-setup-hd b { flex: 1; }
+.wx-chev { color: var(--muted); transition: transform .15s var(--ease); flex: none; }
+.wx-chev.open { transform: rotate(180deg); }
+.wx-setup-body { display: grid; gap: 10px; padding: 0 14px 14px; }
+.wx-setup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.wx-pre { margin: 0; padding-left: 1.4em; display: grid; gap: 4px; color: var(--muted); font-size: .92em; line-height: 1.6; }
+.wx-pre b { color: var(--ink); font-weight: 600; }
+.wx-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.wx-src { flex: none; }
+.wx-src button { padding: 0 12px; }
