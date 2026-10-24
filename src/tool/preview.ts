@@ -13,7 +13,7 @@ const pulled = await pullRelations(m.http, 'T');
 const lib = await getCorpTags(m.http, 'T');
 const mk = (p: Partial<Rule> & Pick<Rule, 'id' | 'tag'>): Rule => ({ field: 'remark', op: 'contains', value: '', group: '自动标签', ...p });
 const rules: Rule[] = [
-  mk({ id: 'p1', value: 'VIP、老客户', tag: '重要客户' }),
+  mk({ id: 'p1', value: '贵宾、老客户', tag: '重要客户' }),
   mk({ id: 'p2', value: '团购、下午茶', tag: '团购' }),
   mk({ id: 'p3', field: 'state', op: 'equals', value: 'xhs_note', tag: '小红书' }),
 ];

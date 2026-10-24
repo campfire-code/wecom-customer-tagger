@@ -1,6 +1,6 @@
 // 企微客户标签批量整理：连接企业微信 → 拉客户和标签库 → 写规则（可加 AI）→ 看改动方案 → 确认后批量打标签 → 导出结果。
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, Download, Loader2, Plus, RefreshCw, Sparkles, Trash2, Users } from 'lucide-react';
+import { ArrowRight, Check, Download, Loader2, Plus, RefreshCw, Sparkles, Tags, Trash2, Users } from 'lucide-react';
 import type { RunContext } from '../kit/types';
 import { settingsStore } from '../kit/platform';
 import { llmReady, useSettings } from '../kit/settings';
@@ -113,16 +113,16 @@ export function Main({ ctx }: { ctx: Ctx }) {
       {conn.source === 'wecom' && <SetupPanel conn={conn} open={setupOpen || !conn.ready} setOpen={setSetupOpen} onMsg={setNotice} />}
       {notice && <div className={`k-notice ${notice.kind}`} role="status">{notice.text}</div>}
 
-      <section className="k-panel wt-card">
-        <div className="wt-hd"><b>1. 拉取客户和标签库</b>
+      <section className="k-panel wt-card wt-step" data-n="1">
+        <div className="wt-hd"><b>拉取客户和标签库</b>
           {rels.length > 0 && <span className="k-help">{rels.length} 条跟进关系（同一客户被多位成员添加算多条，标签按「成员 + 客户」分别打），标签库 {lib.length} 个标签</span>}
           <span className="wt-grow" />
           <button className="k-btn primary" disabled={!idle || !conn.ready} onClick={() => void pull()}>{busy === 'pull' ? <Loader2 size={15} className="k-spin" /> : rels.length ? <RefreshCw size={15} /> : <Users size={15} />}{rels.length ? '重新拉取' : '拉取客户'}</button>
         </div>
       </section>
 
-      <section className="k-panel wt-card">
-        <div className="wt-hd"><b>2. 打标签规则</b><span className="k-help">命中任意规则就加上对应标签；只新增，不会移除客户已有的标签</span>
+      <section className="k-panel wt-card wt-step" data-n="2">
+        <div className="wt-hd"><b>打标签规则</b><span className="k-help">命中任意规则就加上对应标签；只新增，不会移除客户已有的标签</span>
           <span className="wt-grow" />
           <button className="k-btn" disabled={!idle} onClick={() => saveRules([...rules, newRule()])}><Plus size={15} />加一条规则</button>
         </div>
@@ -175,17 +175,19 @@ export function Main({ ctx }: { ctx: Ctx }) {
       {busy && <div className="wt-progress"><Loader2 size={15} className="k-spin" />{progress || '处理中…'}{busy !== 'pull' && <button className="k-btn" onClick={() => stop.current?.abort()}>停止</button>}</div>}
 
       {rels.length > 0 && (
-        <section className="k-panel wt-card wt-plan">
-          <div className="wt-hd"><b>3. 改动方案</b>
-            <span className="wt-stat">将改 <b className="k-num">{plan.rows.length}</b> 条</span>
-            <span className="wt-stat">已有标签、无需改 <b className="k-num">{plan.alreadyDone}</b></span>
-            <span className="wt-stat">没命中规则 <b className="k-num">{plan.unmatched}</b></span>
-            {plan.toCreate.size > 0 && <span className="wt-stat warn">需先新建标签 {[...plan.toCreate].flatMap(([g, n]) => n.map((x) => `${g}/${x}`)).join('、')}</span>}
+        <section className="k-panel wt-card wt-plan wt-step" data-n="3">
+          <div className="wt-hd"><b>改动方案</b><span className="k-help">先核对，再执行；只新增标签</span></div>
+          <div className="wt-hero" aria-label="改动概览">
+            {([['将新增标签', plan.rows.length, 'hit', '条跟进关系'], ['已有标签', plan.alreadyDone, 'done', '条无需改'], ['没命中规则', plan.unmatched, 'miss', '条保持原样']] as const).map(([k, n, c, u]) => (
+              <div key={k} className={`wt-big ${c}`}><span className="wt-big-k">{k}</span><b className="k-num">{n}</b><span className="wt-big-u">{u}</span></div>
+            ))}
+            <div className="wt-bar" aria-hidden>{[plan.rows.length, plan.alreadyDone, plan.unmatched].map((n, i) => <i key={i} className={['hit', 'done', 'miss'][i]} style={{ flexGrow: n }} />)}</div>
           </div>
+          {plan.toCreate.size > 0 && <span className="wt-stat warn">需先新建标签 {[...plan.toCreate].flatMap(([g, n]) => n.map((x) => `${g}/${x}`)).join('、')}</span>}
           {plan.rows.length === 0 ? <p className="k-muted">现在的规则没有需要新增的标签。</p> : (
             <div className="k-scroll wt-tablebox">
               <table className="k-table">
-                <thead><tr><th>客户（示例名仅用于演示）</th><th>跟进成员</th><th>添加时间</th><th>备注</th><th>新增标签</th><th>{hasResults ? '结果' : '依据'}</th></tr></thead>
+                <thead><tr><th>客户</th><th>跟进成员</th><th>添加时间</th><th>备注</th><th>标签：现有 → 新增</th><th>{hasResults ? '结果' : '依据'}</th></tr></thead>
                 <tbody>
                   {plan.rows.slice(0, 300).map((p, i) => {
                     const res = hasResults ? results[i] : undefined;
@@ -194,7 +196,7 @@ export function Main({ ctx }: { ctx: Ctx }) {
                         <td>{p.rel.name}{p.rel.corpName ? <span className="k-muted"> · {p.rel.corpName}</span> : null}</td>
                         <td className="k-num">{p.rel.userid}</td><td className="k-num">{fmtDate(p.rel.createtime)}</td>
                         <td className="wt-remark">{p.rel.remark || <span className="k-muted">—</span>}</td>
-                        <td>{p.add.map((n) => <span key={n} className="wt-tagpill">{n}</span>)}</td>
+                        <td><span className="wt-diff">{p.rel.tagIds.map((id) => <span key={id} className="wt-oldtag">{lib.find((t) => t.id === id)?.name ?? '其他标签'}</span>)}{p.rel.tagIds.length > 0 && <ArrowRight size={13} className="wt-darrow" aria-hidden />}{p.add.map((n) => <span key={n} className="wt-tagpill">+ {n}</span>)}</span></td>
                         <td>{res ? <span className={`wt-st ${res.status === '成功' ? 'ok' : 'err'}`}>{res.status}{res.error ? `：${res.error}` : ''}</span> : <span className="k-muted">{[...new Set(p.why.map(namesInUse))].join('、')}</span>}</td>
                       </tr>
                     );
@@ -218,7 +220,13 @@ export function Main({ ctx }: { ctx: Ctx }) {
           </div>
         </section>
       )}
-      {rels.length === 0 && idle && <section className="k-panel wt-empty"><Users size={26} /><b>批量整理企业微信客户的标签</b><span className="k-muted">先在上方连接企业微信（或切到「示例数据」体验），拉取客户后写规则，看过改动方案再执行。</span></section>}
+      {rels.length === 0 && idle && <section className="k-panel wt-empty">
+        <div className="wt-demo" aria-hidden>
+          <ul className="wt-d-src"><li>备注：贵宾 生日 6 月</li><li>备注：团购 下午茶</li><li>渠道：小红书笔记</li></ul>
+          <span className="wt-d-mid"><Tags size={18} />规则</span>
+          <ul className="wt-d-out"><li><i>+</i>重要客户</li><li><i>+</i>团购</li><li><i>+</i>小红书</li></ul>
+        </div>
+        <b>杂乱的备注，变成整齐的标签</b><span className="k-muted">先在上方连接企业微信（或切到「示例数据」体验），拉取客户后写规则，看过改动方案再执行。</span></section>}
     </div>
   );
 }

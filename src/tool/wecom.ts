@@ -33,11 +33,11 @@ export const urls = {
 const ERRORS: Record<number, string> = {
   [-1]: '企业微信系统繁忙，请稍后再试',
   40001: 'Secret 不对。请确认填的是「自建应用」的 Secret，并且和企业 ID 属于同一个企业',
-  40013: '企业 ID（corpid）不对，请到管理后台「我的企业 → 企业信息」底部核对',
+  40013: '企业 ID 不对，请到管理后台「我的企业 → 企业信息」底部核对',
   40014: 'access_token 不合法，请重试',
-  40056: 'agentid 不合法',
+  40056: '应用编号不合法',
   40068: '标签或标签组 ID 不存在，可能已在后台删除，请重新同步标签库',
-  40096: '客户的 external_userid 不合法',
+  40096: '客户编号不合法',
   40098: '成员尚未实名认证',
   41001: '缺少 access_token 参数',
   41054: '该成员尚未激活',
@@ -46,7 +46,7 @@ const ERRORS: Record<number, string> = {
   45033: '接口并发调用超过限制，请稍后再试',
   48002: '这个应用没有调用该接口的权限。请在管理后台把它加入「客户联系 → 可调用接口的应用」',
   60011: '应用对指定的成员、部门或标签没有权限，请把成员加进应用的可见范围',
-  60111: '成员 UserID 不存在',
+  60111: '成员账号不存在',
   84061: '该成员和这个客户之间不存在外部联系人关系（客户可能已删除）',
   84074: '没有外部联系人权限，请把应用加入「客户联系 → 可调用接口的应用」',
   701008: '这些成员都没有已激活的互通账号',
@@ -231,7 +231,7 @@ export async function addCorpTags(http: Http, token: string, groupName: string, 
 }
 
 export async function markTag(http: Http, token: string, userid: string, externalUserid: string, addTag: string[], removeTag: string[] = []): Promise<void> {
-  if (!addTag.length && !removeTag.length) throw new Error('add_tag 与 remove_tag 不能同时为空');
+  if (!addTag.length && !removeTag.length) throw new Error('要添加的标签和要移除的标签不能同时为空');
   const body: Record<string, unknown> = { userid, external_userid: externalUserid };
   if (addTag.length) body.add_tag = addTag;
   if (removeTag.length) body.remove_tag = removeTag;
@@ -255,8 +255,8 @@ export interface NewContactWay { type: 1 | 2; remark: string; state: string; use
 
 /** 「联系我」的 remark 与 state 都最长 30 个字符；单人类型只能有 1 个成员；每个最多 100 个成员（path/92228） */
 export function checkContactWay(w: NewContactWay): string | null {
-  if (!w.state.trim()) return '渠道参数 state 不能为空，统计时就靠它区分渠道';
-  if ([...w.state].length > 30) return '渠道参数 state 最长 30 个字符';
+  if (!w.state.trim()) return '渠道参数不能为空，统计时就靠它区分渠道';
+  if ([...w.state].length > 30) return '渠道参数最长 30 个字符';
   if ([...w.remark].length > 30) return '备注最长 30 个字符';
   if (!w.users.length) return '至少选择 1 个使用成员';
   if (w.type === 1 && w.users.length !== 1) return '单人活码只能选 1 个成员；要多人轮流接待请选「多人」';

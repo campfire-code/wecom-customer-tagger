@@ -39,7 +39,7 @@ describe('请求构造与错误码', () => {
 describe('token', () => {
   it('企业 ID 错误给出提示；正确时缓存，不重复请求', async () => {
     const m = createMockWecom(NOW);
-    await expect(getToken(m.http, { corpId: 'wwbad', secret: 'x' })).rejects.toThrow(/企业 ID（corpid）不对/);
+    await expect(getToken(m.http, { corpId: 'wwbad', secret: 'x' })).rejects.toThrow(/企业 ID 不对/);
     await expect(getToken(m.http, { corpId: MOCK_CORP.corpId, secret: 'x' })).rejects.toThrow(/Secret 不对/);
     expect(await getToken(m.http, MOCK_CORP, NOW)).toBe('MOCK_TOKEN');
     await getToken(m.http, MOCK_CORP, NOW + 3600_000);

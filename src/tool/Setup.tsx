@@ -77,8 +77,8 @@ export function SetupPanel({ conn, open, setOpen, onMsg }: { conn: Conn; open: b
       {open && (
         <div className="wx-setup-body">
           <div className="wx-setup-grid">
-            <div className="k-field"><label className="k-label" htmlFor="wx-corp">企业 ID（corpid）</label><input id="wx-corp" className="k-input" autoComplete="off" value={draft.corpId} placeholder="ww 开头" onChange={(e) => setDraft({ ...draft, corpId: e.target.value })} /></div>
-            <div className="k-field"><label className="k-label" htmlFor="wx-secret">自建应用 Secret</label><input id="wx-secret" className="k-input" type="password" autoComplete="off" value={draft.secret} placeholder="应用详情里的 Secret" onChange={(e) => setDraft({ ...draft, secret: e.target.value })} /></div>
+            <div className="k-field"><label className="k-label" htmlFor="wx-corp">企业 ID</label><input id="wx-corp" className="k-input" autoComplete="off" value={draft.corpId} placeholder="管理后台里的企业 ID，共 18 位" onChange={(e) => setDraft({ ...draft, corpId: e.target.value })} /></div>
+            <div className="k-field"><label className="k-label" htmlFor="wx-secret">自建应用的 Secret（应用密钥）</label><input id="wx-secret" className="k-input" type="password" autoComplete="off" value={draft.secret} placeholder="应用详情里的 Secret" onChange={(e) => setDraft({ ...draft, secret: e.target.value })} /></div>
           </div>
           <ol className="wx-pre">
             <li>企业 ID 在管理后台「我的企业 → 企业信息」里查看；Secret 用<b>自建应用</b>的（2023 年 12 月 1 日起，新企业不能再用系统应用的 Secret 调接口）。</li>

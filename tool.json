@@ -7,7 +7,8 @@
   "license": "MIT",
   "ui": {
     "layout": "b",
-    "palette": "teal"
+    "palette": "teal",
+    "accent": "#13AE46"
   },
   "upstream": null
 }

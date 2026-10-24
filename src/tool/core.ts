@@ -21,7 +21,7 @@ export const DEFAULT_GROUP = '自动标签';
 export const TAG_NAME_MAX = 30;
 
 export const FIELD_LABELS: Record<RuleField, string> = {
-  remark: '备注', description: '描述', corpName: '客户企业名', name: '客户名称', state: '渠道参数 state',
+  remark: '备注', description: '描述', corpName: '客户企业名', name: '客户名称', state: '渠道参数',
   userid: '跟进成员', addWay: '添加方式', type: '客户类型', ageDays: '添加至今天数',
 };
 export const FIELD_OPS: Record<RuleField, [RuleOp, string][]> = {
@@ -199,7 +199,7 @@ export interface ResultRow { userid: string; externalUserid: string; name: strin
 
 const csvCell = (v: string) => (/[",\n\r]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
 export function toCsv(rows: ResultRow[]): string {
-  const head = ['跟进成员', '客户 external_userid', '客户名称', '新增标签', '结果', '失败原因'];
+  const head = ['跟进成员', '客户编号', '客户名称', '新增标签', '结果', '失败原因'];
   const lines = [head, ...rows.map((r) => [r.userid, r.externalUserid, r.name, r.add.join('、'), r.status, r.error])];
   return '﻿' + lines.map((l) => l.map(csvCell).join(',')).join('\r\n') + '\r\n';
 }
