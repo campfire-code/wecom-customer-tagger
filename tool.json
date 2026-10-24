@@ -2,7 +2,7 @@
   "id": "w06",
   "slug": "wecom-customer-tagger",
   "name": "企微客户标签批量整理",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "repo": "campfire-code/wecom-customer-tagger",
   "license": "MIT",
   "ui": {
